@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from math import exp
 from os import path, remove
-from typing import Callable
+from typing import Callable, Tuple
 
 
 @dataclass
@@ -49,7 +49,7 @@ class Biseccion:
     def get_r(self, valor_a: float, valor_b: float) -> float:
         return (valor_a + valor_b) / 2
 
-    def __next__(self) -> FilaMetodo, float:
+    def __next__(self) -> Tuple[FilaMetodo, float]:
         if self.iteracion_actual == self.iteracion_maxima:
             raise StopIteration
         self.iteracion_actual += 1
@@ -93,7 +93,7 @@ def nuevaLinea(linea: str, archivo: str) -> None:
 
 
 if __name__ == "__main__":
-    archivo = "prueba.csv"
+    archivo: str = "prueba.csv"
     if path.exists(archivo):
         remove(archivo)
     iteraciones: int = 15

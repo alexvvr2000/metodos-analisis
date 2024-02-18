@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import exp
 from typing import Callable, Tuple
 
 
@@ -13,7 +14,7 @@ class FilaMetodo:
     criterio: float
 
 
-class Biseccion:
+class PosicionFalsa:
     funcion: Callable[[float], float]
     filaActual: FilaMetodo
     error_relativo: float = -1
@@ -64,14 +65,14 @@ class Biseccion:
         f_a: float = self.funcion(a_actual)
         f_r: float = self.funcion(r_actual)
         criterio: float = f_a * f_r
-        if criterio == 0:
+        if f_r == 0:
             raise StopIteration
         elif criterio < 0:
             self.a_actual = a_actual
             self.b_actual = r_actual
         else:
-            self.a_actual = a_actual
-            self.b_actual = r_actual
+            self.a_actual = r_actual
+            self.b_actual = b_actual
         self.filaActual = FilaMetodo(
             valor_a=a_actual,
             valor_b=b_actual,
@@ -86,4 +87,9 @@ class Biseccion:
 
 
 if __name__ == "__main__":
-    print("_")
+
+    def funcion(x: float) -> float:
+        return exp(-x) - x
+
+    for filaActual, iteracion in PosicionFalsa(funcion, 0, 1, 3):
+        print(filaActual, "\n")

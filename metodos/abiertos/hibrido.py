@@ -1,7 +1,5 @@
-from collections.abc import Iterable
 from dataclasses import dataclass
 
-from metodos.abiertos.newton import Newton
 from metodos.tipos import Funcion2d, IteracionABC
 
 
@@ -26,7 +24,7 @@ class Hibrido:
     iteracion_maxima: int
     funcion: Funcion2d
     derivada: Funcion2d
-    fila_anterior: IteracionABC
+    fila_anterior: IteracionHibrido
     a_inicial: float
     b_inicial: float
 
@@ -46,3 +44,12 @@ class Hibrido:
         self.iteracion_maxima = iteracion_maxima
         self.a_inicial = a_inicial
         self.b_inicial = b_inicial
+
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> IteracionHibrido:
+        if self.iteracion_actual == self.iteracion_maxima:
+            raise StopIteration
+        self.iteracion_actual += 1
+        return self.fila_anterior

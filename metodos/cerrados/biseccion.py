@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from math import exp
-from typing import Callable
 
-from metodos.tipos import IteracionABC
+from metodos.tipos import Funcion2d, IteracionABC
+from metodos.utils import get_error_relativo
 
 
 @dataclass
@@ -27,7 +27,7 @@ class IteracionBiseccion(IteracionABC):
 
 
 class Biseccion:
-    funcion: Callable[[float], float]
+    funcion: Funcion2d
     filaActual: IteracionBiseccion
     error_relativo: float = -1
     calculado: bool = False
@@ -37,9 +37,7 @@ class Biseccion:
     iteracion_actual: int = 0
     iteracion_maxima: int = 0
 
-    def __init__(
-        self, funcion: Callable[[float], float], a: float, b: float, iteraciones: int
-    ):
+    def __init__(self, funcion: Funcion2d, a: float, b: float, iteraciones: int):
         if a > b:
             raise Exception("El valor a tiene que ser menor a b")
 
@@ -54,9 +52,6 @@ class Biseccion:
     def __iter__(self):
         return self
 
-    def get_error_relativo(self, r_actual: float, r_anterior: float) -> float:
-        return abs((r_actual - r_anterior) / r_actual)
-
     def get_r(self, valor_a: float, valor_b: float) -> float:
         return (valor_a + valor_b) / 2
 
@@ -70,7 +65,7 @@ class Biseccion:
         error_actual: float = -1
         if self.calculado:
             r_anterior: float = self.filaActual.valor_r
-            error_actual: float = self.get_error_relativo(r_actual, r_anterior)
+            error_actual: float = get_error_relativo(r_actual, r_anterior)
         self.error_actual = error_actual
         f_b: float = self.funcion(b_actual)
         f_r: float = self.funcion(r_actual)

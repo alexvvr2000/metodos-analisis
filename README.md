@@ -5,5 +5,5 @@ Dentro de este proyecto se implementan los siguientes métodos de aproximación 
 - [x] Bisección
 - [x] Newton-Rapsoda
 - [x] De Posición Falsa
-- [ ] De Recta Secante
+- [x] De Recta Secante
 - [ ] Híbrido

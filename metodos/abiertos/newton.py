@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from math import exp
-from os import path, remove
 from typing import Callable, Tuple
 
 
@@ -81,14 +80,6 @@ if __name__ == "__main__":
     def derivada_funcion(valor: float) -> float:
         return -1 * exp(-1 * valor) - 1
 
-    def nuevaLinea(linea: str, archivo: str) -> None:
-        with open(archivo, "a") as csv:
-            csv.write(linea)
-
-    archivo = "prueba.csv"
-    if path.exists(archivo):
-        remove(archivo)
     iteraciones: int = 15
-    nuevaLinea("iteracion,x_i,f(xi),f'(xi),x_i+1,error", archivo)
     for fila, iteracion in Newton(funcion, derivada_funcion, 3, 0):
         print(fila, "\n")

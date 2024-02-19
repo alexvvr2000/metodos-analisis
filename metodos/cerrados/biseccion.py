@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from math import exp
-from os import path, remove
 from typing import Callable, Tuple
 
 
@@ -88,27 +87,6 @@ if __name__ == "__main__":
     def funcion(valor: float) -> float:
         return exp(-1 * valor) - valor
 
-    def nuevaLinea(linea: str, archivo: str) -> None:
-        with open(archivo, "a") as csv:
-            csv.write(linea)
-
-    archivo: str = "prueba.csv"
-    if path.exists(archivo):
-        remove(archivo)
     iteraciones: int = 15
-    nuevaLinea(
-        "iteracion,valor_a,valor_b,valor_r,f_b,f_r,error_relativo,criterio\n", archivo
-    )
     for fila, iteracion in Biseccion(funcion, 0, 1, iteraciones):
-        valor_a: float = fila.valor_a
-        valor_b: float = fila.valor_b
-        valor_r: float = fila.valor_r
-        f_b: float = fila.f_b
-        f_r: float = fila.f_r
-        error_relativo: float = fila.error_relativo
-        criterio: float = fila.criterio
-        nueva_linea: str = f"{iteracion},{valor_a},{valor_b},{valor_r},{f_b},{f_r},{error_relativo},{criterio}"
-        if iteracion == iteraciones:
-            nuevaLinea(nueva_linea, archivo)
-        else:
-            nuevaLinea(f"{nueva_linea}\n", archivo)
+        print(fila, "\n")

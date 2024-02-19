@@ -27,6 +27,7 @@ class Secante:
     fila_actual: IteracionSecante
     iteracion_actual: int
     iteracion_maxima: int
+    primero_calculado: bool = False
 
     def __init__(
         self,
@@ -44,5 +45,14 @@ class Secante:
     def __iter__(self):
         return self
 
-    def get_error_relativo(self, r_actual: float, r_anterior: float) -> float:
-        return abs((r_actual - r_anterior) / r_actual)
+    def obtener_x_siguiente(self, xi_actual: float, xi_anterior: float) -> float:
+        return xi_actual - (self.funcion(xi_actual) * (xi_anterior - xi_actual)) / (
+            self.funcion(xi_anterior) - self.funcion(xi_actual)
+        )
+
+    def __next__(self) -> IteracionSecante:
+        if self.iteracion_actual == self.iteracion_maxima:
+            raise StopIteration
+        self.iteracion_actual += 1
+        self.primero_calculado = True
+        return self.fila_actual

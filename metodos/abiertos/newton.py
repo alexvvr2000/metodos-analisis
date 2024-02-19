@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from math import exp
 from typing import Callable
 
-from metodos.tipos import IteracionABC
+from metodos.tipos import Funcion2d, IteracionABC
+from metodos.utils import get_error_relativo
 
 
 @dataclass
@@ -25,8 +26,8 @@ class IteracionNewton(IteracionABC):
 
 
 class Newton:
-    funcion: Callable[[float], float]
-    derivada_funcion: Callable[[float], float]
+    funcion: Funcion2d
+    derivada_funcion: Funcion2d
     filaActual: IteracionNewton
     error_relativo: float = -1
     calculado: bool = False
@@ -38,8 +39,8 @@ class Newton:
 
     def __init__(
         self,
-        funcion: Callable[[float], float],
-        derivada_funcion: Callable[[float], float],
+        funcion: Funcion2d,
+        derivada_funcion: Funcion2d,
         iteraciones: int,
         valor_inicial: float,
     ):
@@ -53,9 +54,6 @@ class Newton:
 
     def __iter__(self):
         return self
-
-    def get_error_relativo(self, valor_actual: float, valor_anterior: float) -> float:
-        return abs((valor_anterior - valor_actual) / valor_anterior)
 
     def get_criterio(self, x_i: float, f_x: float, f_derivada_x: float) -> float:
         return x_i - f_x / f_derivada_x
@@ -71,7 +69,7 @@ class Newton:
         f_derivada_x: float = self.derivada_funcion(x_i)
         criterio: float = self.get_criterio(x_i, f_x, f_derivada_x)
         if self.iteracion_actual != 1:
-            self.error_relativo = self.get_error_relativo(self.valor_anterior, criterio)
+            self.error_relativo = get_error_relativo(self.valor_anterior, criterio)
         self.valor_anterior = criterio
         self.filaActual = IteracionNewton(
             x_i=x_i,

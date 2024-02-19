@@ -1,21 +1,36 @@
 from dataclasses import dataclass
 from math import exp
-from typing import Callable, Tuple
+from typing import Callable
+
+from metodos.tipos import IteracionABC
 
 
 @dataclass
-class FilaMetodo:
+class IteracionNewton(IteracionABC):
     x_i: float
     f_x: float
     f_derivada_x: float
     criterio: float
     error_relativo: float
+    iteracion: int
+
+    def obtener_x_i(self) -> float:
+        return self.x_i
+
+    def obtener_criterio(self) -> float:
+        return self.criterio
+
+    def obtener_iteracion(self) -> int:
+        return self.iteracion
+
+    def obtener_error_relativo(self) -> float:
+        return self.error_relativo
 
 
 class Newton:
     funcion: Callable[[float], float]
     derivada_funcion: Callable[[float], float]
-    filaActual: FilaMetodo
+    filaActual: IteracionNewton
     error_relativo: float = -1
     calculado: bool = False
     x_anterior: float
@@ -48,7 +63,7 @@ class Newton:
     def get_criterio(self, x_i: float, f_x: float, f_derivada_x: float) -> float:
         return x_i - f_x / f_derivada_x
 
-    def __next__(self) -> Tuple[FilaMetodo, int]:
+    def __next__(self) -> IteracionNewton:
         if self.iteracion_actual == self.iteracion_maxima:
             raise StopIteration
         self.iteracion_actual += 1
@@ -61,15 +76,16 @@ class Newton:
         if self.iteracion_actual != 1:
             self.error_relativo = self.get_error_relativo(self.valor_anterior, criterio)
         self.valor_anterior = criterio
-        self.filaActual = FilaMetodo(
+        self.filaActual = IteracionNewton(
             x_i=x_i,
             f_x=f_x,
             f_derivada_x=f_derivada_x,
             error_relativo=self.error_relativo,
             criterio=criterio,
+            iteracion=self.iteracion_actual,
         )
         self.calculado = True
-        return self.filaActual, self.iteracion_actual
+        return self.filaActual
 
 
 if __name__ == "__main__":
@@ -81,5 +97,5 @@ if __name__ == "__main__":
         return -1 * exp(-1 * valor) - 1
 
     iteraciones: int = 15
-    for fila, iteracion in Newton(funcion, derivada_funcion, 3, 0):
+    for fila in Newton(funcion, derivada_funcion, 3, 0):
         print(fila, "\n")

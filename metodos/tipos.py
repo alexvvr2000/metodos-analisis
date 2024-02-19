@@ -1,19 +1,19 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class IteracionABC(ABC):
-    @property
-    def iteracion(self) -> int:
+    @abstractmethod
+    def obtener_iteracion(self) -> int:
         pass
 
-    @property
-    def x_i(self) -> float:
+    @abstractmethod
+    def obtener_x_i(self) -> float:
         pass
 
-    @property
-    def criterio(self) -> float:
+    @abstractmethod
+    def obtener_criterio(self) -> float:
         pass
 
-    @property
-    def error_relativo(self) -> float:
+    @abstractmethod
+    def obtener_error_relativo(self) -> float:
         pass

@@ -34,6 +34,15 @@ class Secante:
         funcion: Funcion2d,
         iteracion_maxima: int,
     ) -> None:
+        if iteracion_maxima <= 0:
+            raise Exception("Debe ser 1 o mas iteraciones")
+
         self.valor_inicial = valor_inicial
         self.funcion = funcion
         self.iteracion_maxima = iteracion_maxima
+
+    def __iter__(self):
+        return self
+
+    def get_error_relativo(self, r_actual: float, r_anterior: float) -> float:
+        return abs((r_actual - r_anterior) / r_actual)

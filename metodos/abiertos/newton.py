@@ -54,7 +54,8 @@ class Newton:
     def __iter__(self):
         return self
 
-    def get_criterio(self, x_i: float, f_x: float, f_derivada_x: float) -> float:
+    @staticmethod
+    def get_criterio(x_i: float, f_x: float, f_derivada_x: float) -> float:
         return x_i - f_x / f_derivada_x
 
     def __next__(self) -> IteracionNewton:

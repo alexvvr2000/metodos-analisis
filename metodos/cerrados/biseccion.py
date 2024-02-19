@@ -52,7 +52,8 @@ class Biseccion:
     def __iter__(self):
         return self
 
-    def get_r(self, valor_a: float, valor_b: float) -> float:
+    @staticmethod
+    def get_r(valor_a: float, valor_b: float) -> float:
         return (valor_a + valor_b) / 2
 
     def __next__(self) -> IteracionBiseccion:

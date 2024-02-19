@@ -52,9 +52,10 @@ class PosicionFalsa:
     def __iter__(self):
         return self
 
-    def get_r(self, valor_a: float, valor_b: float) -> float:
-        return valor_b - (self.funcion(valor_b) * (valor_a - valor_b)) / (
-            self.funcion(valor_a) - self.funcion(valor_b)
+    @staticmethod
+    def get_r(funcion: Funcion2d, valor_a: float, valor_b: float) -> float:
+        return valor_b - (funcion(valor_b) * (valor_a - valor_b)) / (
+            funcion(valor_a) - funcion(valor_b)
         )
 
     def __next__(self) -> IteracionPosicionFalsa:
@@ -63,7 +64,7 @@ class PosicionFalsa:
         self.iteracion_actual += 1
         a_actual: float = self.a_actual
         b_actual: float = self.b_actual
-        r_actual: float = self.get_r(a_actual, b_actual)
+        r_actual: float = self.get_r(self.funcion, a_actual, b_actual)
         error_actual: float = -1
         if self.calculado:
             r_anterior: float = self.filaActual.valor_r

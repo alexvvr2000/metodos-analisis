@@ -48,9 +48,12 @@ class Secante:
     def __iter__(self):
         return self
 
-    def obtener_x_siguiente(self, xi_actual: float, xi_anterior: float) -> float:
-        return xi_actual - (self.funcion(xi_actual) * (xi_anterior - xi_actual)) / (
-            self.funcion(xi_anterior) - self.funcion(xi_actual)
+    @staticmethod
+    def obtener_x_siguiente(
+        funcion: Funcion2d, xi_actual: float, xi_anterior: float
+    ) -> float:
+        return xi_actual - (funcion(xi_actual) * (xi_anterior - xi_actual)) / (
+            funcion(xi_anterior) - funcion(xi_actual)
         )
 
     def __next__(self) -> IteracionSecante:
@@ -66,7 +69,7 @@ class Secante:
         else:
             xi_anterior = self.fila_anterior.xi_actual
             xi_actual = self.fila_anterior.xi_siguiente
-        xi_siguiente = self.obtener_x_siguiente(xi_actual, xi_anterior)
+        xi_siguiente = self.obtener_x_siguiente(self.funcion, xi_actual, xi_anterior)
         error_relativo: float = (
             -1
             if self.iteracion_actual == 1

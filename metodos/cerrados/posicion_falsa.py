@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from math import exp
-from typing import Callable
 
 from metodos.tipos import Funcion2d, IteracionABC
 from metodos.utils import get_error_relativo

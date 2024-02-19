@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from math import exp
-from typing import Callable, Tuple
+from typing import Callable
+
+from metodos.tipos import IteracionABC
 
 
 @dataclass
-class FilaMetodo:
+class IteracionBiseccion(IteracionABC):
     valor_a: float
     valor_b: float
     valor_r: float
@@ -12,11 +14,21 @@ class FilaMetodo:
     f_r: float
     error_relativo: float
     criterio: float
+    iteracion: int
+
+    def obtener_error_relativo(self) -> float:
+        return self.error_relativo
+
+    def obtener_iteracion(self) -> int:
+        return self.iteracion
+
+    def obtener_x_i(self) -> float:
+        return self.valor_r
 
 
 class Biseccion:
     funcion: Callable[[float], float]
-    filaActual: FilaMetodo
+    filaActual: IteracionBiseccion
     error_relativo: float = -1
     calculado: bool = False
     a_actual: float = 0
@@ -48,7 +60,7 @@ class Biseccion:
     def get_r(self, valor_a: float, valor_b: float) -> float:
         return (valor_a + valor_b) / 2
 
-    def __next__(self) -> Tuple[FilaMetodo, float]:
+    def __next__(self) -> IteracionBiseccion:
         if self.iteracion_actual == self.iteracion_maxima:
             raise StopIteration
         self.iteracion_actual += 1
@@ -69,7 +81,8 @@ class Biseccion:
         else:
             self.a_actual = a_actual
             self.b_actual = r_actual
-        self.filaActual = FilaMetodo(
+        self.filaActual = IteracionBiseccion(
+            iteracion=self.iteracion_actual,
             valor_a=a_actual,
             valor_b=b_actual,
             valor_r=r_actual,
@@ -79,7 +92,7 @@ class Biseccion:
             criterio=criterio,
         )
         self.calculado = True
-        return self.filaActual, self.iteracion_actual
+        return self.filaActual
 
 
 if __name__ == "__main__":
@@ -88,5 +101,5 @@ if __name__ == "__main__":
         return exp(-1 * valor) - valor
 
     iteraciones: int = 15
-    for fila, iteracion in Biseccion(funcion, 0, 1, iteraciones):
+    for fila in Biseccion(funcion, 0, 1, iteraciones):
         print(fila, "\n")

@@ -11,9 +11,5 @@ class IteracionABC(ABC):
         pass
 
     @abstractmethod
-    def obtener_criterio(self) -> float:
-        pass
-
-    @abstractmethod
     def obtener_error_relativo(self) -> float:
         pass

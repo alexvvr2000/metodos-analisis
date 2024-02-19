@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from metodos.tipos import Funcion2d, IteracionABC
+from metodos.utils import get_error_relativo
 
 
 @dataclass
@@ -22,28 +23,27 @@ class IteracionSecante(IteracionABC):
 
 
 class Secante:
-    x0_inicial: float
-    x1_inicial: float
+    xi_anterior_inicial: float
+    xi_inicial: float
     funcion: Funcion2d
-    fila_actual: IteracionSecante
-    iteracion_actual: int
+    fila_anterior: IteracionSecante
+    iteracion_actual: int = 0
     iteracion_maxima: int
-    primero_calculado: bool = False
 
     def __init__(
         self,
-        x1_inicial: float,
-        x0_inicial: float,
+        xi_anterior_inicial: float,
+        xi_inicial: float,
         funcion: Funcion2d,
         iteracion_maxima: int,
     ) -> None:
         if iteracion_maxima <= 0:
             raise Exception("Debe ser 1 o mas iteraciones")
 
-        self.x0_inicial = x0_inicial
+        self.xi_anterior_inicial = xi_anterior_inicial
+        self.xi_inicial = xi_inicial
         self.funcion = funcion
         self.iteracion_maxima = iteracion_maxima
-        self.x1_inicial = x1_inicial
 
     def __iter__(self):
         return self
@@ -57,8 +57,29 @@ class Secante:
         if self.iteracion_actual == self.iteracion_maxima:
             raise StopIteration
         self.iteracion_actual += 1
-        self.primero_calculado = True
-        return self.fila_actual
+        xi_anterior: float
+        xi_actual: float
+        xi_siguiente: float
+        if self.iteracion_actual == 1:
+            xi_anterior = self.xi_anterior_inicial
+            xi_actual = self.xi_inicial
+        else:
+            xi_anterior = self.fila_anterior.xi_actual
+            xi_actual = self.fila_anterior.xi_siguiente
+        xi_siguiente = self.obtener_x_siguiente(xi_actual, xi_anterior)
+        error_relativo: float = (
+            -1
+            if self.iteracion_actual == 1
+            else get_error_relativo(xi_siguiente, self.fila_anterior.xi_siguiente)
+        )
+        self.fila_anterior = IteracionSecante(
+            iteracion=self.iteracion_actual,
+            xi_anterior=xi_anterior,
+            xi_actual=xi_actual,
+            xi_siguiente=xi_siguiente,
+            error_relativo=error_relativo,
+        )
+        return self.fila_anterior
 
 
 if __name__ == "__main__":

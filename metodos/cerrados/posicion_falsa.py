@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from math import exp
-from typing import Callable, Tuple
+from typing import Callable
+
+from metodos.tipos import IteracionABC
 
 
 @dataclass
-class FilaMetodo:
+class IteracionPosicionFalsa(IteracionABC):
     valor_a: float
     valor_b: float
     valor_r: float
@@ -12,11 +14,21 @@ class FilaMetodo:
     f_r: float
     error_relativo: float
     criterio: float
+    iteracion: int
+
+    def obtener_error_relativo(self) -> float:
+        return self.error_relativo
+
+    def obtener_x_i(self) -> float:
+        return self.valor_r
+
+    def obtener_iteracion(self) -> int:
+        return self.iteracion
 
 
 class PosicionFalsa:
     funcion: Callable[[float], float]
-    filaActual: FilaMetodo
+    filaActual: IteracionPosicionFalsa
     error_relativo: float = -1
     calculado: bool = False
     a_actual: float = 0
@@ -50,7 +62,7 @@ class PosicionFalsa:
             self.funcion(valor_a) - self.funcion(valor_b)
         )
 
-    def __next__(self) -> Tuple[FilaMetodo, float]:
+    def __next__(self) -> IteracionPosicionFalsa:
         if self.iteracion_actual == self.iteracion_maxima:
             raise StopIteration
         self.iteracion_actual += 1
@@ -73,7 +85,7 @@ class PosicionFalsa:
         else:
             self.a_actual = r_actual
             self.b_actual = b_actual
-        self.filaActual = FilaMetodo(
+        self.filaActual = IteracionPosicionFalsa(
             valor_a=a_actual,
             valor_b=b_actual,
             valor_r=r_actual,
@@ -81,9 +93,10 @@ class PosicionFalsa:
             f_r=f_r,
             error_relativo=error_actual,
             criterio=criterio,
+            iteracion=self.iteracion_actual,
         )
         self.calculado = True
-        return self.filaActual, self.iteracion_actual
+        return self.filaActual
 
 
 if __name__ == "__main__":
@@ -91,5 +104,5 @@ if __name__ == "__main__":
     def funcion(x: float) -> float:
         return exp(-x) - x
 
-    for filaActual, iteracion in PosicionFalsa(funcion, 0, 1, 3):
+    for filaActual in PosicionFalsa(funcion, 0, 1, 3):
         print(filaActual, "\n")

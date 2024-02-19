@@ -17,9 +17,6 @@ class IteracionNewton(IteracionABC):
     def obtener_x_i(self) -> float:
         return self.x_i
 
-    def obtener_criterio(self) -> float:
-        return self.criterio
-
     def obtener_iteracion(self) -> int:
         return self.iteracion
 

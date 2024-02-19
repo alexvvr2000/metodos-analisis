@@ -5,7 +5,6 @@ from typing import Callable, Tuple
 
 
 @dataclass
-# nuevaLinea("iteracion,x_i,f(xi),f'(xi),x_i+1,error", archivo)
 class FilaMetodo:
     x_i: float
     f_x: float
@@ -74,20 +73,18 @@ class Newton:
         return self.filaActual, self.iteracion_actual
 
 
-def funcion(valor: float) -> float:
-    return exp(-1 * valor) - valor
-
-
-def derivada_funcion(valor: float) -> float:
-    return -1 * exp(-1 * valor) - 1
-
-
-def nuevaLinea(linea: str, archivo: str) -> None:
-    with open(archivo, "a") as csv:
-        csv.write(linea)
-
-
 if __name__ == "__main__":
+
+    def funcion(valor: float) -> float:
+        return exp(-1 * valor) - valor
+
+    def derivada_funcion(valor: float) -> float:
+        return -1 * exp(-1 * valor) - 1
+
+    def nuevaLinea(linea: str, archivo: str) -> None:
+        with open(archivo, "a") as csv:
+            csv.write(linea)
+
     archivo = "prueba.csv"
     if path.exists(archivo):
         remove(archivo)

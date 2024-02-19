@@ -83,16 +83,15 @@ class Biseccion:
         return self.filaActual, self.iteracion_actual
 
 
-def funcion(valor: float) -> float:
-    return exp(-1 * valor) - valor
-
-
-def nuevaLinea(linea: str, archivo: str) -> None:
-    with open(archivo, "a") as csv:
-        csv.write(linea)
-
-
 if __name__ == "__main__":
+
+    def funcion(valor: float) -> float:
+        return exp(-1 * valor) - valor
+
+    def nuevaLinea(linea: str, archivo: str) -> None:
+        with open(archivo, "a") as csv:
+            csv.write(linea)
+
     archivo: str = "prueba.csv"
     if path.exists(archivo):
         remove(archivo)
